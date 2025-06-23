@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>表單</title></head>
+<body>
+<h2>輸入資料</h2>
+<form method="post">
+  {% csrf_token %}
+  姓名：<input type="text" name="name"><br>
+  年齡：<input type="text" name="age"><br>
+  <input type="submit" value="送出資料" />
+</form>
+{% if message %}<p>{{ message }}</p>{% endif %}
+</body>
+</html>
