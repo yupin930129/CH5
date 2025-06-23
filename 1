@@ -9,3 +9,100 @@ urlpatterns = [
     path('postform/', views.postform),      # 使用 form 類別驗證
     path('delete/<int:id>/', views.delete), # 刪除資料
 ]
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Student
+from .forms import StudentForm
+
+# 顯示資料
+def index(request):
+    students = Student.objects.all()
+    return render(request, 'index.html', {'students': students})
+
+# POST 表單（單純傳值）
+def post(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        return render(request, 'post_result.html', {'name': name, 'age': age})
+    return render(request, 'post_form.html')
+
+# 新增資料（無驗證）
+def post1(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        Student.objects.create(name=name, age=age)
+        return redirect('/index/')
+    return render(request, 'post_form.html')
+
+# 新增資料（簡單驗證）
+def post2(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        if name and age.isdigit():
+            Student.objects.create(name=name, age=int(age))
+            return redirect('/index/')
+        return render(request, 'post_form.html', {'error': '資料格式錯誤'})
+    return render(request, 'post_form.html')
+
+# 使用 ModelForm 驗證
+def postform(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/index/')
+    else:
+        form = StudentForm()
+    return render(request, 'postform.html', {'form': form})
+
+# 刪除
+def delete(request, id):
+    student = get_object_or_404(Student, id=id)
+    student.delete()
+    return redirect('/index/')
+from django import forms
+from .models import Student
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['name', 'age']
+from django.db import models
+
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+<h2>新增學生資料</h2>
+<form method="post">
+    {% csrf_token %}
+    姓名：<input type="text" name="name"><br>
+    年齡：<input type="text" name="age"><br>
+    <input type="submit" value="送出資料" />
+</form>
+{% if error %}
+    <p style="color:red">{{ error }}</p>
+{% endif %}
+<h2>使用 Django 表單驗證</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="送出資料" />
+</form>
+<h2>表單結果</h2>
+<p>姓名：{{ name }}</p>
+<p>年齡：{{ age }}</p>
+<a href="/index/">回首頁</a>
+<h2>學生清單</h2>
+<ul>
+    {% for student in students %}
+        <li>{{ student.name }}（{{ student.age }} 歲）
+            <a href="/delete/{{ student.id }}/">刪除</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="/post/">原始表單</a> |
+<a href="/post1/">直接新增</a> |
+<a href="/post2/">驗證新增</a> |
+<a href="/postform/">表單驗證</a>
