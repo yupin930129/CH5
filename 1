@@ -1,15 +1,59 @@
 myproject/
 ├── manage.py
+├── myproject/
+│   ├── settings.py
+│   └── wsgi.py
 ├── myapp/
 │   ├── views.py
 │   ├── urls.py
-│   ├── templates/
-│   │   ├── post_form.html
-│   │   ├── index.html
-│   │   └── postform.html
-│   └── forms.py
-├── myproject/
-│   ├── settings.py
-│   ├── urls.py
-├── Dockerfile（可選）
-├── requirements.txt
+│   └── templates/
+│       ├── index.html
+│       ├── post_form.html
+│       └── postform.html
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+.env
+venv/
+env/
+db.sqlite3
+pip freeze > requirements.txt
+web: gunicorn myproject.wsgi:application
+import os
+
+# 設定靜態檔案根目錄
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+# 設定可被訪問的主機（你可以先設為 *）
+ALLOWED_HOSTS = ['*']
+git init
+git add .
+git commit -m "Initial Django commit"
+git remote add origin https://github.com/你的帳號/你的repo.git
+git push -u origin main
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls')),  # 將 myapp 中的路由包含進來
+]
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('post/', views.post),
+    path('index/', views.index),
+    path('post1/', views.post1),
+    path('post2/', views.post2),
+    path('postform/', views.postform),
+    path('delete/<int:id>/', views.delete),
+]
+<form method="post">
+  {% csrf_token %}
+  姓名：<input type="text" name="name"><br>
+  年齡：<input type="text" name="age"><br>
+  <input type="submit" value="送出資料" />
+</form>
