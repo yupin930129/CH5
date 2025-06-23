@@ -1,44 +1,36 @@
 myproject/
 ├── manage.py
+├── requirements.txt           ✅ 套件清單
+├── Procfile                   ✅ Render 專用啟動指令
 ├── myproject/
-│   ├── settings.py
-│   └── wsgi.py
+│   ├── __init__.py
+│   ├── settings.py            ✅ 有設定 ALLOWED_HOSTS、STATIC_ROOT
+│   ├── urls.py
+│   └── wsgi.py                ✅ 啟動伺服器需要
 ├── myapp/
-│   ├── views.py
+│   ├── __init__.py
+│   ├── views.py               ✅ 含 post(), index(), post1(), ...
 │   ├── urls.py
 │   └── templates/
 │       ├── index.html
 │       ├── post_form.html
 │       └── postform.html
-__pycache__/
-*.py[cod]
-*.sqlite3
-*.log
-.env
-venv/
-env/
-db.sqlite3
-pip freeze > requirements.txt
+Django>=4.2
+gunicorn
 web: gunicorn myproject.wsgi:application
 import os
 
-# 設定靜態檔案根目錄
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# 加在 settings.py 裡適當位置
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# 設定可被訪問的主機（你可以先設為 *）
-ALLOWED_HOSTS = ['*']
-git init
-git add .
-git commit -m "Initial Django commit"
-git remote add origin https://github.com/你的帳號/你的repo.git
-git push -u origin main
+ALLOWED_HOSTS = ['*']  # Render 部署時設定為 ['your-app-name.onrender.com'] 也可以
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('myapp.urls')),  # 將 myapp 中的路由包含進來
+    path('', include('myapp.urls')),
 ]
 from django.urls import path
 from . import views
@@ -57,3 +49,8 @@ urlpatterns = [
   年齡：<input type="text" name="age"><br>
   <input type="submit" value="送出資料" />
 </form>
+git init
+git add .
+git commit -m "Initial Django commit"
+git remote add origin https://github.com/你的帳號/你的repo.git
+git push -u origin main
