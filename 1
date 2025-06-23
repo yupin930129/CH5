@@ -17,40 +17,4 @@ myproject/
 │       └── postform.html
 Django>=4.2
 gunicorn
-web: gunicorn myproject.wsgi:application
-import os
 
-# 加在 settings.py 裡適當位置
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-ALLOWED_HOSTS = ['*']  # Render 部署時設定為 ['your-app-name.onrender.com'] 也可以
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('myapp.urls')),
-]
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('post/', views.post),
-    path('index/', views.index),
-    path('post1/', views.post1),
-    path('post2/', views.post2),
-    path('postform/', views.postform),
-    path('delete/<int:id>/', views.delete),
-]
-<form method="post">
-  {% csrf_token %}
-  姓名：<input type="text" name="name"><br>
-  年齡：<input type="text" name="age"><br>
-  <input type="submit" value="送出資料" />
-</form>
-git init
-git add .
-git commit -m "Initial Django commit"
-git remote add origin https://github.com/你的帳號/你的repo.git
-git push -u origin main
