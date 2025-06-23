@@ -1,20 +1,20 @@
 myproject/
 ├── manage.py
-├── requirements.txt           ✅ 套件清單
-├── Procfile                   ✅ Render 專用啟動指令
 ├── myproject/
 │   ├── __init__.py
-│   ├── settings.py            ✅ 有設定 ALLOWED_HOSTS、STATIC_ROOT
+│   ├── settings.py
 │   ├── urls.py
-│   └── wsgi.py                ✅ 啟動伺服器需要
+│   ├── wsgi.py
 ├── myapp/
 │   ├── __init__.py
-│   ├── views.py               ✅ 含 post(), index(), post1(), ...
+│   ├── views.py
 │   ├── urls.py
 │   └── templates/
 │       ├── index.html
-│       ├── post_form.html
-│       └── postform.html
-Django>=4.2
-gunicorn
-
+│       └── post_form.html
+├── staticfiles/               ← collectstatic 產出
+├── requirements.txt
+├── Procfile
+├── render.yaml
+├── .env
+├── db.sqlite3
